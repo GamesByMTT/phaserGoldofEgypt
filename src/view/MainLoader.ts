@@ -17,7 +17,7 @@ export default class MainLoader extends Scene {
     private title: GameObjects.Sprite | null = null;
     private star: GameObjects.Sprite | null = null;
     private maxProgress: number = 0.7; // Cap progress at 70%
-    public soundManager: SoundManager; // Add a SoundManager instance   
+    public soundManager: SoundManager; // Add a SoundManager instance
     private progressBarContainer!: Phaser.GameObjects.Graphics;
     private progressBarFill!: Phaser.GameObjects.Graphics;
     private progressBarWidth: number = 350; // Adjust as needed
@@ -39,6 +39,8 @@ export default class MainLoader extends Scene {
 
         this.load.image("logo", "src/sprites/ElDorado.png");
         this.load.svg("title", "src/sprites/title.svg");
+        // this.load.image('loaderBg', "src/sprites/loaderBg.png")
+        this.load.image("assetsloader", "src/sprites/assetsLoader.png")
         this.load.spritesheet('star', "src/sprites/star-animation.png", { 
             frameWidth: 120,  // Width of each frame in the spritesheet
             frameHeight: 80 // Height of each frame in the spritesheet
@@ -47,8 +49,19 @@ export default class MainLoader extends Scene {
         this.load.once('complete', () => {
             this.addBackgroundImage();
             this.startLoadingAssets();
+            this.setupFontLoader();
         });
-        this.setupFontLoader();
+    }
+    private setupFontLoader() {
+        WebFont.load({
+            custom: {
+                families: ['Sava'],
+                urls: ['src/fonts/Sava-Pro-Semibold.otf']
+            },
+            active: () => {
+                // Fonts have loaded
+            }
+        });
     }
 
     private addBackgroundImage() {
@@ -160,9 +173,9 @@ export default class MainLoader extends Scene {
         );
     }
 
+
     private startLoadingAssets() {
         // Load all assets from LoaderConfig
-        console.log("startLoadingAssets");
         this.load.start();
         Object.entries(LoaderConfig).forEach(([key, value]) => {
             this.load.image(key, value);
@@ -182,18 +195,6 @@ export default class MainLoader extends Scene {
                 this.loadScene();
             }
         });       
-    }
-
-    private setupFontLoader() {
-        WebFont.load({
-            custom: {
-                families: ['Digra'],
-                urls: ['src/fonts/DirgaExtraBold-BWPqn.otf']
-            },
-            active: () => {
-                // Fonts have loaded
-            }
-        });
     }
 
     private completeLoading() {
@@ -231,7 +232,9 @@ export default class MainLoader extends Scene {
     }
 
     public loadScene() {
-        this.completeLoading();
-        Globals.SceneHandler?.addScene('MainScene', MainScene, true)
+        setTimeout(() => {
+            this.completeLoading();
+            Globals.SceneHandler?.addScene('MainScene', MainScene, true)
+        }, 1000);
     }
 }

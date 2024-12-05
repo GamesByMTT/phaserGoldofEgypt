@@ -109,9 +109,9 @@ export class Slots extends Phaser.GameObjects.Container {
         this.spacingY = this.symbolHeight * 1.8; // Add some spacing
         const startPos = {
             x: gameConfig.scale.width / 3.6,
-            y: gameConfig.scale.height / 3.8     
+            y: gameConfig.scale.height / 3.7     
         };
-        const totalSymbol = 7;
+        const totalSymbol = 50;
         const visibleSymbol = 3;
         const startIndex = 1;
         const initialYOffset = (totalSymbol - startIndex - visibleSymbol) * this.spacingY;
@@ -119,15 +119,15 @@ export class Slots extends Phaser.GameObjects.Container {
             const reelContainer = new Phaser.GameObjects.Container(scene);
             this.reelContainers.push(reelContainer); // Store the container for future use
             this.slotSymbols[i] = [];
-            for (let j = 0; j < 28; j++) { // 3 rows
+            for (let j = 0; j < 50; j++) { // 3 rows
                 let symbolKey = this.getRandomSymbolKey(); // Get a random symbol key
                 let slot = new Symbols(scene, symbolKey, { x: i, y: j }, reelContainer);
                 slot.symbol.setMask(new Phaser.Display.Masks.GeometryMask(scene, this.slotMask));
                 slot.symbol.setPosition(
-                    startPos.x + i * this.spacingX,
+                startPos.x + i * this.spacingX,
                     startPos.y + j * this.spacingY
                 );
-                // slot.symbol.setScale(0.45, 0.45)
+                slot.symbol.setScale(0.92)
                 slot.startX = slot.symbol.x;
                 slot.startY = slot.symbol.y;
                 this.slotSymbols[i].push(slot);
@@ -290,7 +290,7 @@ class Symbols {
     startX: number = 0;
     startMoving: boolean = false;
     index: { x: number; y: number };
-    totalSymbol : number = 14;
+    totalSymbol : number = 50;
     visibleSymbol: number = 3;
     startIndex: number = 1;
     spacingY : number = 204;

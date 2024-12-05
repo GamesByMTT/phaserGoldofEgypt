@@ -7,7 +7,9 @@ import { Globals, ResultData, currentGameData } from '../scripts/Globals';
 import SoundManager from '../scripts/SoundManager';
 
 export default class MainScene extends Scene {
+    Background!: Phaser.GameObjects.Sprite
     slot!: Slots;
+    balanceText!: Phaser.GameObjects.Sprite
     slotFrame!: Phaser.GameObjects.Sprite;
     lineGenerator!: LineGenerator;
     uiContainer!: UiContainer;
@@ -29,6 +31,9 @@ export default class MainScene extends Scene {
         this.soundManager = new SoundManager(this)
         // Initialize main container
         this.mainContainer = this.add.container();
+        this.Background = new Phaser.GameObjects.Sprite(this, width/2, height/2, "Background")
+        this.balanceText = this.add.sprite(width/2, height * 0.06, "balanceText").setOrigin(0.5)
+        this.mainContainer.add([this.Background])
 
         // Set up the slot frame
         this.slotFrame = new Phaser.GameObjects.Sprite(this, width / 2, height / 2, 'frame').setOrigin(0.5)
@@ -118,10 +123,11 @@ export default class MainScene extends Scene {
                     // If count is 1 or less, ensure text is scaled normally
                     this.uiContainer.freeSpininit(freeSpinCount)
                 }
-                setTimeout(() => {
-                    this.slot.stopTween();
-                }, 1000);
+               
             });
+            setTimeout(() => {
+                this.slot.stopTween();
+            }, 1000);
         }
     }
 }

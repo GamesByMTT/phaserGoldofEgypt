@@ -3,6 +3,7 @@ import { Globals, TextStyle } from "./Globals";
 import { gameConfig } from "./appconfig";
 import { TextLabel } from "./TextLabel";
 import { UiContainer } from "./UiContainer";
+import InfoScene from "./infoPopup";
 import MainLoader from "../view/MainLoader";
 
 export class UiPopups extends Phaser.GameObjects.Container {
@@ -21,7 +22,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
         this.setPosition(0, 0);
         this.ruleBtnInit();
         this.settingBtnInit();
-        this.infoBtnInit();
+        // this.infoBtnInit();
         this.menuBtnInit();
         this.exitButton();
         this.UiContainer = uiContainer
@@ -63,18 +64,6 @@ export class UiPopups extends Phaser.GameObjects.Container {
         this.add(this.settingBtn);
     }
 
-    infoBtnInit() {
-        const infoBtnSprites = [
-            this.scene.textures.get('infoBtn'),
-            this.scene.textures.get('infoBtnH'),
-        ];
-        this.infoBtn = new InteractiveBtn(this.scene, infoBtnSprites, () => {
-            // info button 
-        }, 2, false); // Adjusted the position index
-        this.infoBtn.setPosition(this.infoBtn.width, this.infoBtn.height * 0.7);
-        this.add(this.infoBtn);
-    }
-
     ruleBtnInit() {
         const rulesBtnSprites = [
             this.scene.textures.get('rulesBtn'),
@@ -82,9 +71,14 @@ export class UiPopups extends Phaser.GameObjects.Container {
         ];
         this.rulesBtn = new InteractiveBtn(this.scene, rulesBtnSprites, () => {
             // rules button
-        }, 3, false); // Adjusted the position index
+            this.openPage()
+        }, 2, false); // Adjusted the position index
         this.rulesBtn.setPosition(this.rulesBtn.width, this.rulesBtn.height * 0.7);
         this.add(this.rulesBtn);
+    }
+
+    openPage() {
+        Globals.SceneHandler?.addScene("InfoScene", InfoScene, true)
     }
 
     openPopUp() {
@@ -92,12 +86,12 @@ export class UiPopups extends Phaser.GameObjects.Container {
         this.isOpen = !this.isOpen;
         this.menuBtn.setInteractive(false);
         if (this.isOpen) {
-            this.tweenToPosition(this.rulesBtn, 3);
-            this.tweenToPosition(this.infoBtn, 2);
+            this.tweenToPosition(this.rulesBtn, 2);
+            // this.tweenToPosition(this.infoBtn, 2);
             this.tweenToPosition(this.settingBtn, 1);
         } else {
             this.tweenBack(this.rulesBtn);
-            this.tweenBack(this.infoBtn);
+            // this.tweenBack(this.infoBtn);
             this.tweenBack(this.settingBtn);
         }
     }
@@ -151,18 +145,19 @@ export class UiPopups extends Phaser.GameObjects.Container {
         // Popup background image
         const popupBg = this.scene.add.image(0, 0, 'popupBgimg').setDepth(10);
         popupBg.setOrigin(0.5);
-        popupBg.setDisplaySize(683, 787); // Set the size for your popup background
+        // popupBg.setDisplaySize(683, 787); // Set the size for your popup background
         popupBg.setAlpha(1); // Set background transparency
         this.exitBtn.disableInteractive();
+
+        const popupHeading = new TextLabel(this.scene, 0, -300, "QUIT GAME", 40, "#632e2e")
         // Add text to the popup
-        const popupText = new TextLabel(this.scene, 0, -45, "Are you sure you \n want to exit?", 35, "#3C2625");
-        
+        const popupText = new TextLabel(this.scene, 0, -55, "DO YOU REALLY \n WANT TO QUIT?", 40, "#632e2e");
         // Yes and No buttons
-        const logoutButtonSprite = [
-            this.scene.textures.get("lines"),
-            this.scene.textures.get("lines")
+        const yesButton = [
+            this.scene.textures.get("yesButton"),
+            this.scene.textures.get("yesButtonHover")
         ];
-        this.yesBtn = new InteractiveBtn(this.scene, logoutButtonSprite, () => {
+        this.yesBtn = new InteractiveBtn(this.scene, yesButton, () => {
             this.UiContainer.onSpin(false);
             Globals.Socket?.socket.emit("EXIT", {});
             window.parent.postMessage("onExit", "*");
@@ -170,7 +165,12 @@ export class UiPopups extends Phaser.GameObjects.Container {
             blurGraphic.destroy(); // Destroy blurGraphic when popup is closed
         }, 0, true);
     
-        this.noBtn = new InteractiveBtn(this.scene, logoutButtonSprite, () => {
+        const noButton = [
+            this.scene.textures.get("noButton"),
+            this.scene.textures.get("noButtonHover")
+        ];
+
+        this.noBtn = new InteractiveBtn(this.scene, noButton, () => {
             this.UiContainer.onSpin(false);
             this.exitBtn.setInteractive()
             this.exitBtn.setTexture("exitButtonPressed");
@@ -178,13 +178,11 @@ export class UiPopups extends Phaser.GameObjects.Container {
             blurGraphic.destroy(); // Destroy blurGraphic when popup is closed
         }, 0, true);
        
-        this.yesBtn.setPosition(-130, 80);
-        this.noBtn.setPosition(130, 80);
+        this.yesBtn.setPosition(-130, 80).setScale(0.7);
+        this.noBtn.setPosition(130, 80).setScale(0.7);
         // Button labels
-        const noText = new TextLabel(this.scene, 130, 65, "No", 30, "#ffffff");
-        const yesText = new TextLabel(this.scene, -130, 65, "Yes", 30, "#ffffff");
         // Add all elements to popupContainer
-        popupContainer.add([popupBg, popupText, this.yesBtn, this.noBtn, yesText, noText]);
+        popupContainer.add([popupBg, popupHeading, popupText, this.yesBtn, this.noBtn]);
         // Add popupContainer to the scene
         this.scene.add.existing(popupContainer);       
     }

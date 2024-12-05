@@ -3,13 +3,14 @@ import { gameConfig, CalculateScaleFactor } from "./appconfig";
 import { Globals } from "./Globals";
 import { SocketManager } from "../socket";
 import { SceneHandler } from "./SceneHandler";
-// import "../../public/style.css"
 
 window.parent.postMessage( "authToken","*");
 
 if(!IS_DEV){
   window.addEventListener("message", function(event: MessageEvent) {
     // Check the message type and handle accordingly
+    console.log("evveverfe");
+    
     if (event.data.type === "authToken") {
       // console.log("event check", event.data);
       const data = { 
@@ -19,14 +20,15 @@ if(!IS_DEV){
       // Call the provided callback function
       Globals.Socket = new SocketManager();
       Globals.Socket.onToken(data);
-      window.parent.postMessage("OnEnter", "*")
+
     }
   });
 }
 else{
+  console.log("check");
   const data  = {
     socketUrl : "https://game-crm-rtp-backend.onrender.com/",
-    authToken : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg1MjhmYTI3YmY5MDI0NDNlYmExZiIsInVzZXJuYW1lIjoiYXJwaXQiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzMzMjIxNDEzLCJleHAiOjE3MzM4MjYyMTN9.o0GzeJQKlT00JpWpaMhJLeDbRkbRYsiChptOvAmIt9U",
+    authToken : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg1MjhmYTI3YmY5MDI0NDNlYmExZiIsInVzZXJuYW1lIjoiYXJwaXQiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzMzNDAwODI3LCJleHAiOjE3MzQwMDU2Mjd9.Pt4sKtUyYR4YAcHM2YDPsUHAlyAG_GCKncD5jp6NZxw",
   }
   Globals.Socket = new SocketManager();
   Globals.Socket.onToken(data);
