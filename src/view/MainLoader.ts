@@ -40,7 +40,7 @@ export default class MainLoader extends Scene {
         this.load.image("logo", "src/sprites/ElDorado.png");
         this.load.svg("title", "src/sprites/title.svg");
         // this.load.image('loaderBg', "src/sprites/loaderBg.png")
-        this.load.image("assetsloader", "src/sprites/assetsLoader.png")
+        // this.load.image("assetsloader", "src/sprites/assetsLoader.png")
         this.load.spritesheet('star', "src/sprites/star-animation.png", { 
             frameWidth: 120,  // Width of each frame in the spritesheet
             frameHeight: 80 // Height of each frame in the spritesheet

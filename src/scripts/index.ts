@@ -8,9 +8,6 @@ window.parent.postMessage( "authToken","*");
 
 if(!IS_DEV){
   window.addEventListener("message", function(event: MessageEvent) {
-    // Check the message type and handle accordingly
-    console.log("evveverfe");
-    
     if (event.data.type === "authToken") {
       // console.log("event check", event.data);
       const data = { 
@@ -25,10 +22,9 @@ if(!IS_DEV){
   });
 }
 else{
-  console.log("check");
   const data  = {
     socketUrl : "https://game-crm-rtp-backend.onrender.com/",
-    authToken : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg1MjhmYTI3YmY5MDI0NDNlYmExZiIsInVzZXJuYW1lIjoiYXJwaXQiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzMzNDAwODI3LCJleHAiOjE3MzQwMDU2Mjd9.Pt4sKtUyYR4YAcHM2YDPsUHAlyAG_GCKncD5jp6NZxw",
+    authToken : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDg1MjhmYTI3YmY5MDI0NDNlYmExZiIsInVzZXJuYW1lIjoiYXJwaXQiLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzMzNDczODA0LCJleHAiOjE3MzQwNzg2MDR9.fhzpi2WXjRLdtZ81HrCX2B-hmIS335rD8eQedAx2HQs",
   }
   Globals.Socket = new SocketManager();
   Globals.Socket.onToken(data);

@@ -44,7 +44,7 @@ export class SocketManager {
     });
 
     this.socket.on("connect", () => {
-      console.log("Connected to the server");
+      // console.log("Connected to the server");
       this.socket.on("message", (message : any) => {
         const data = JSON.parse(message);
         if(data.id == "InitData" ) {
@@ -58,12 +58,12 @@ export class SocketManager {
             initData.gameData = data.message.GameData;
             initData.playerData = data.message.PlayerData;
             initData.UIData.symbols = data.message.UIData.paylines.symbols
+            ResultData.playerData.Balance = data.message.PlayerData.Balance
             currentGameData.currentBalance = data.message.PlayerData.Balance
             console.log(data, "initData on Socket File");
           }
         }
         if(data.id == "ResultData"){
-
             ResultData.gameData = data.message.GameData;
             ResultData.playerData = data.message.PlayerData;
             Globals.emitter?.Call("ResultData");

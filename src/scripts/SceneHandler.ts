@@ -19,12 +19,9 @@ export class SceneHandler {
      * @param sceneClass The scene class to instantiate.
      */
     addScene(key: string, sceneClass: typeof Scene, autoStart: boolean = false) {
-        console.error("sceneHandler", key);
-        
         // Check if the scene already exists in Phaser's scene manager
         const existingScene = this.game.scene.getScene(key);
         if (existingScene) {
-            console.log(`Scene with key "${key}" already exists. Destroying the existing scene...`);
             // Stop and remove the existing scene if it exists
             this.game.scene.stop(key);
             this.game.scene.remove(key);

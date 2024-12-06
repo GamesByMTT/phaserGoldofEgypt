@@ -4,9 +4,11 @@ import { gameConfig } from "./appconfig";
 import { TextLabel } from "./TextLabel";
 import { UiContainer } from "./UiContainer";
 import InfoScene from "./infoPopup";
-import MainLoader from "../view/MainLoader";
+import SoundManager from "./SoundManager";
+import { currentGameData } from "./Globals";
 
 export class UiPopups extends Phaser.GameObjects.Container {
+    SoundManager: SoundManager;
     UiContainer: UiContainer
     menuBtn!: InteractiveBtn;
     settingBtn!: InteractiveBtn;
@@ -17,7 +19,13 @@ export class UiPopups extends Phaser.GameObjects.Container {
     noBtn!: InteractiveBtn
     isOpen: boolean = false;
     isExitOpen: boolean = false;
-    constructor(scene: Phaser.Scene, uiContainer: UiContainer) {
+    settingClose!: InteractiveBtn;
+    onButton!: InteractiveBtn;
+    offButton!:InteractiveBtn;
+    toggleBar!: InteractiveBtn;
+    soundEnabled: boolean = true; // Track sound state
+    musicEnabled: boolean = true; // Track sound state
+    constructor(scene: Phaser.Scene, uiContainer: UiContainer, soundManager: SoundManager) {
         super(scene);
         this.setPosition(0, 0);
         this.ruleBtnInit();
@@ -26,6 +34,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
         this.menuBtnInit();
         this.exitButton();
         this.UiContainer = uiContainer
+        this.SoundManager = soundManager
         scene.add.existing(this);
     }
 
@@ -36,6 +45,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
         ];
         this.menuBtn = new InteractiveBtn(this.scene, menuBtnTextures, () => {
             this.openPopUp();
+            this.buttonMusic("buttonpressed");
         }, 0, true);
         this.menuBtn.setPosition(this.menuBtn.width, this.menuBtn.height * 0.7 );
         this.add(this.menuBtn);
@@ -46,7 +56,8 @@ export class UiPopups extends Phaser.GameObjects.Container {
             this.scene.textures.get('exitButtonPressed')
         ];
         this.exitBtn = new InteractiveBtn(this.scene, exitButtonSprites, ()=>{
-                this.openLogoutPopup();
+            this.buttonMusic("buttonpressed");
+            this.openLogoutPopup();
         }, 0, true, );
         this.exitBtn.setPosition(gameConfig.scale.width - this.exitBtn.width, this.exitBtn.height * 0.7)
         this.add(this.exitBtn)
@@ -59,6 +70,8 @@ export class UiPopups extends Phaser.GameObjects.Container {
         ];
         this.settingBtn = new InteractiveBtn(this.scene, settingBtnSprites, () => {
             // setting Button
+            this.buttonMusic("buttonpressed");
+            this.openSettingPopup();
         }, 1, false); // Adjusted the position index
         this.settingBtn.setPosition(this.settingBtn.width, this.settingBtn.height * 0.7);
         this.add(this.settingBtn);
@@ -71,6 +84,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
         ];
         this.rulesBtn = new InteractiveBtn(this.scene, rulesBtnSprites, () => {
             // rules button
+            this.buttonMusic("buttonpressed");
             this.openPage()
         }, 2, false); // Adjusted the position index
         this.rulesBtn.setPosition(this.rulesBtn.width, this.rulesBtn.height * 0.7);
@@ -158,6 +172,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
             this.scene.textures.get("yesButtonHover")
         ];
         this.yesBtn = new InteractiveBtn(this.scene, yesButton, () => {
+            this.buttonMusic("buttonpressed");
             this.UiContainer.onSpin(false);
             Globals.Socket?.socket.emit("EXIT", {});
             window.parent.postMessage("onExit", "*");
@@ -171,6 +186,7 @@ export class UiPopups extends Phaser.GameObjects.Container {
         ];
 
         this.noBtn = new InteractiveBtn(this.scene, noButton, () => {
+            this.buttonMusic("buttonpressed");
             this.UiContainer.onSpin(false);
             this.exitBtn.setInteractive()
             this.exitBtn.setTexture("exitButtonPressed");
@@ -194,6 +210,112 @@ export class UiPopups extends Phaser.GameObjects.Container {
             this.rulesBtn.disableInteractive();
             this.menuBtn.disableInteractive();
         }
+    }
+
+    openSettingPopup() {
+        const settingblurGraphic = this.scene.add.graphics().setDepth(1); // Set depth lower than popup elements
+        settingblurGraphic.fillStyle(0x000000, 0.5); // Black with 50% opacity
+        settingblurGraphic.fillRect(0, 0, this.scene.scale.width, this.scene.scale.height); // Cover entire screen
+
+        const infopopupContainer = this.scene.add.container(
+            this.scene.scale.width / 2,
+            this.scene.scale.height / 2
+        ).setDepth(1);
+        
+        let soundOn = this.SoundManager.getMasterVolume() > 0;
+        let musicOn = this.SoundManager.getSoundVolume("backgroundMusic") > 0;
+
+        const popupBg = this.scene.add.image(0, 0, 'settingPopup').setDepth(9);
+        const soundsImage = this.scene.add.text(-50, -140, 'Sound', {fontFamily: "Sava", fontSize: "40px", color: "#632e2e"}).setDepth(10);
+        const musicImage = this.scene.add.text(-50, 50, 'Music', {fontFamily: "Sava", fontSize:"40px", color: "#632e2e"}).setDepth(10);
+
+        const toggleBarSprite = [
+            this.scene.textures.get('toggleBar'),
+            this.scene.textures.get('toggleBar')
+        ];
+       
+        const soundToggleButton =  currentGameData.soundMode ? 'onButton' : 'offButton'
+        let onOff : any
+        if(!currentGameData.soundMode){
+            onOff = this.scene.add.image(-35, -50, soundToggleButton);
+        }else{
+            onOff = this.scene.add.image(30, -50, soundToggleButton);
+        }
+        onOff.setInteractive()
+        onOff.on('pointerdown', () => {
+            // this.toggleSound(onOff);
+            soundOn = !soundOn;
+            this.adjustSoundVolume(onOff); // Assuming 1 is full volume
+            onOff.setTexture(soundOn ? 'onButton' : 'offButton');
+        })
+
+        const toggleMusicBar = this.scene.add.image(0, 140, "toggleBar")
+        const musicToggleButton = currentGameData.musicMode ? 'onButton' : 'offButton'
+        let offMusic: any
+
+        if(!currentGameData.musicMode){
+            offMusic = this.scene.add.image(-35, 140, musicToggleButton);
+        }else{
+            offMusic = this.scene.add.image(30, 140, musicToggleButton);
+        }
+        // offMusic.setScale(0.5)
+        offMusic.setInteractive();
+        offMusic.on('pointerdown', () => {
+            this.adjustMusicVolume(offMusic); // Assuming 1 is full volume
+        })
+
+        this.toggleBar = new InteractiveBtn(this.scene, toggleBarSprite, () => {
+            // this.toggleSound();
+        }, 0, true).setPosition(0, -50);
+
+        const exitButtonSprites = [
+            this.scene.textures.get('exitButton'),
+            this.scene.textures.get('exitButtonPressed')
+        ];
+        this.settingClose = new InteractiveBtn(this.scene, exitButtonSprites, () => {
+            infopopupContainer.destroy();
+            settingblurGraphic.destroy();
+            this.buttonMusic("buttonpressed")
+        }, 0, true);
+        this.settingClose.setPosition(300, -300);
+
+        popupBg.setOrigin(0.5);
+        // popupBg.setScale(0.8);
+        popupBg.setAlpha(1); // Set background transparency
+
+        infopopupContainer.add([popupBg, this.settingClose, soundsImage, musicImage, this.toggleBar, onOff, toggleMusicBar, offMusic]);
+    }
+    adjustSoundVolume(onOff: any) {
+        currentGameData.soundMode = !currentGameData.soundMode
+        this.soundEnabled = !this.soundEnabled;
+        if (this.soundEnabled) {
+            this.buttonMusic("buttonpressed");
+            onOff.setTexture('onButton');
+            onOff.setPosition(30, -50); // Move position for 'On' state
+           
+        } else {
+            onOff.setTexture('offButton');
+            onOff.setPosition(-35, -50); // Move position for 'Off' state
+        }
+        this.SoundManager.setSoundEnabled(this.soundEnabled)
+    }
+
+    // Function to adjust music volume
+    adjustMusicVolume(offMusic: any) {
+        currentGameData.musicMode = !currentGameData.musicMode
+        this.musicEnabled = !this.musicEnabled;
+        if (this.musicEnabled) {
+            this.buttonMusic("buttonpressed");
+            offMusic.setTexture('onButton');
+            offMusic.setPosition(30, 140); // Move position for 'On' state
+        } else {
+            offMusic.setTexture('offButton');
+            offMusic.setPosition(-35, 140); // Move position for 'Off' state;
+        }
+        this.SoundManager.setMusicEnabled(this.musicEnabled)
+    }
+    buttonMusic(key: string){
+        this.SoundManager.playSound(key)
     }
 }
 

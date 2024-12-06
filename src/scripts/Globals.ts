@@ -40,7 +40,7 @@ export const Globals: globalDataType = {
 interface SymbolType {
   ID: number;
   Name: string;
-  multiplier: number[]; // Assuming multiplier is an array of numbers
+  multiplier: [number, number][];
   defaultAmount: object;
   symbolsCount: object;
   description: string
@@ -53,6 +53,8 @@ export const currentGameData = {
   currentLines : 0,
   currentBalance : 0,
   isMoving : false,
+  soundMode: true,
+  musicMode: true,
 }
 
 export const initData = {
@@ -76,14 +78,91 @@ export const initData = {
       {
         ID: 0,
         Name: "0",
-        multiplier: [5, 4, 2],
+        multiplier: [[5, 0], [4, 0], [2, 0]],
         defaultAmount: {}, // Replace with actual data
         symbolsCount: {},  // Replace with actual data
       },
       {
         ID: 1,
         Name: "1",
-        multiplier: [5, 4, 2],
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 2,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 1,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 3,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 4,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 5,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 6,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 7,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 8,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 9,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 10,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
+        defaultAmount: {}, // Replace with actual data
+        symbolsCount: {},  // Replace with actual data
+      },
+      {
+        ID: 11,
+        Name: "1",
+        multiplier: [[5, 0], [4, 0], [2, 0]],
         defaultAmount: {}, // Replace with actual data
         symbolsCount: {},  // Replace with actual data
       },

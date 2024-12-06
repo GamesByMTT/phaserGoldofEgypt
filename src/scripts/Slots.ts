@@ -270,7 +270,8 @@ export class Slots extends Phaser.GameObjects.Container {
                     const [y, x]: number[] = row.split(",").map((value) => parseInt(value));
                     const animationId = `symbol_anim_${ResultData.gameData.ResultReel[x][y]}`;
                     if (this.slotSymbols[y] && this.slotSymbols[y][x]) {
-                        // this.winMusic("winMusic");
+                        this.uiContainer.startFireAnimation();
+                        this.winMusic("winMusic");
                         this.slotSymbols[y][x].playAnimation(animationId);
                     }
                 }

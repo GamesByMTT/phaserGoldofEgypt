@@ -39,6 +39,19 @@ export const LoaderConfig = {
     disconnectClose: "src/sprites/disconnectClose.png",
     disconnectCloseHover: "src/sprites/disconnectCloseHover.png",
     infoPopupBg: "src/sprites/payTablePopup.png",
+    leftArrow: "src/sprites/previousButton.png",
+    rightArrow: "src/sprites/nextButton.png",
+    settingPopup: "src/sprites/settingPopup.png",
+    toggleBar: "src/sprites/sounds.png",
+    onButton: "src/sprites/ON.png",
+    offButton: "src/sprites/OFF.png",
+    bigWinPopup: "src/sprites/bigWinPopup.png",
+    hugeWinPopup: "src/sprites/hugeWinPopup.png",
+    megaWinPopup: "src/sprites/megaWinPopup.png",
+    jackpotPopup: "src/sprites/jackpotPopup.png",
+    freeSpinPopup: "src/sprites/freeSpinPopup.png",
+    freeSpinStartButton: "src/sprites/freeSpinStartButton.png",
+    freeSpinStartButtonHover: "src/sprites/freeSpinStartButtonHover.png",
     
     slots5_0 :  "/src/sprites/Symbols/A/A (1).png",
     slots5_1 :  "/src/sprites/Symbols/A/A (2).png",
@@ -455,7 +468,13 @@ export const fontData = ["Montserrat"];
 
 
 export const LoaderSoundConfig: any = {
-// onSpin :  "/src/sounds/onStartCoin.mp3",
+    backgroundMusic: "src/sounds/Teaser.wav",
+    onSpin :  "/src/sounds/slot-machine-loop.wav",
+    spinButton: "src/sounds/spin.wav",
+    winMusic: "src/sounds/win_sound.wav",
+    buttonpressed: "src/sounds/Game-Button.mp3",
+    // spinWheelMusic: "src/sounds/spinWheel.mp3"
+
 };
 
 export const preloaderConfig = {
